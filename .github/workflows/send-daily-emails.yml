@@ -23,25 +23,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Debug secrets availability
-      env:
-        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
-        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
-        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
-        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
-        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
-      run: |
-        echo "🔍 Checking environment variables..."
-        echo "GMAIL_EMAIL is set: $([[ -n "$GMAIL_EMAIL" ]] && echo "YES" || echo "NO")"
-        echo "GMAIL_APP_PASSWORD is set: $([[ -n "$GMAIL_APP_PASSWORD" ]] && echo "YES" || echo "NO")"
-        echo "OUTLOOK_EMAIL is set: $([[ -n "$OUTLOOK_EMAIL" ]] && echo "YES" || echo "NO")"
-        echo "OUTLOOK_PASSWORD is set: $([[ -n "$OUTLOOK_PASSWORD" ]] && echo "YES" || echo "NO")"
-        echo "YAHOO_EMAIL is set: $([[ -n "$YAHOO_EMAIL" ]] && echo "YES" || echo "NO")"
-        echo "YAHOO_PASSWORD is set: $([[ -n "$YAHOO_PASSWORD" ]] && echo "YES" || echo "NO")"
-        
     - name: Validate configuration
       env:
+        # Set only the email services that are actually configured
         GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
         GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
@@ -55,6 +39,7 @@ jobs:
         
     - name: Send emails
       env:
+        # Set only the email services that are actually configured
         GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
         GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
@@ -70,4 +55,5 @@ jobs:
       if: always()
       run: |
         echo "Government road complaint emails processing completed at $(date)"
+        echo "Next scheduled send: Monday, Wednesday, or Friday at 9:00 AM Pakistan time (4:00 AM UTC)"
         echo "Workflow status: ${{ job.status }}"
