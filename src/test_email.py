@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Test script for the automated government email system
 This script tests the email templates and configuration without sending actual emails.

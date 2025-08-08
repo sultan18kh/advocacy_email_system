@@ -2,12 +2,8 @@ name: Government Road Complaint Emails (Mon/Wed/Fri)
 
 on:
   schedule:
-    # Run on Monday, Wednesday, Friday at 9:00 AM Pakistan Time (UTC+5)
-    # This translates to 4:00 AM UTC on Mon, Wed, Fri
-    # Cron format: minute hour day month day-of-week
-    # 1 = Monday, 3 = Wednesday, 5 = Friday
     - cron: '0 4 * * 1,3,5'
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   send-emails:
@@ -27,20 +23,44 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Validate configuration
+    - name: Debug secrets availability
+      env:
+        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
       run: |
-        python src/test_email.py
+        echo "🔍 Checking environment variables..."
+        echo "GMAIL_EMAIL is set: $([[ -n "$GMAIL_EMAIL" ]] && echo "YES" || echo "NO")"
+        echo "GMAIL_APP_PASSWORD is set: $([[ -n "$GMAIL_APP_PASSWORD" ]] && echo "YES" || echo "NO")"
+        echo "OUTLOOK_EMAIL is set: $([[ -n "$OUTLOOK_EMAIL" ]] && echo "YES" || echo "NO")"
+        echo "OUTLOOK_PASSWORD is set: $([[ -n "$OUTLOOK_PASSWORD" ]] && echo "YES" || echo "NO")"
+        echo "YAHOO_EMAIL is set: $([[ -n "$YAHOO_EMAIL" ]] && echo "YES" || echo "NO")"
+        echo "YAHOO_PASSWORD is set: $([[ -n "$YAHOO_PASSWORD" ]] && echo "YES" || echo "NO")"
+        
+    - name: Validate configuration
+      env:
+        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+        GITHUB_ACTIONS: true
+      run: |
+        cd src
+        python test_email.py
         
     - name: Send emails
       env:
-        # Email service configurations - only set secrets that exist
-        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL || '' }}
-        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD || '' }}
-        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL || '' }}
-        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD || '' }}
-        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL || '' }}
-        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD || '' }}
-        # GitHub Actions environment flag
+        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
         GITHUB_ACTIONS: true
       run: |
         cd src
@@ -50,6 +70,4 @@ jobs:
       if: always()
       run: |
         echo "Government road complaint emails processing completed at $(date)"
-        echo "Next scheduled send: Monday, Wednesday, or Friday at 9:00 AM Pakistan time (4:00 AM UTC)"
-        echo "Check the logs above for success/failure details"
         echo "Workflow status: ${{ job.status }}"
