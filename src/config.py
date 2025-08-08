@@ -34,15 +34,6 @@ RECIPIENT_EMAILS = [
     # "your_additional_email@domain.com",
 ]
 
-# Media Files Configuration
-MEDIA_FILES = [
-    'media/road_photo1.jpg',
-    'media/road_photo2.jpg',
-    'media/pothole_video.mp4',
-    'media/flooding_video.mp4',
-    # Add more media files as needed
-]
-
 # Email Schedule Configuration
 EMAIL_SCHEDULE = {
     'time': '09:00',  # Daily email time (24-hour format)
@@ -53,7 +44,8 @@ EMAIL_SCHEDULE = {
 ANTI_SPAM_CONFIG = {
     'min_delay': 10,  # Minimum delay between operations (seconds)
     'max_delay': 60,  # Maximum delay between operations (seconds)
-    'max_attachments': 2,  # Maximum number of attachments per email
+    'max_file_size_mb': 25,  # Maximum individual file size (MB)
+    'max_total_size_mb': 50,  # Maximum total attachment size (MB)
 }
 
 # Email Templates Configuration
@@ -133,9 +125,9 @@ EMAIL_SERVICES = [
 
 # GitHub Actions Configuration
 GITHUB_ACTIONS_CONFIG = {
-    'cron_schedule': '0 4 * * *',  # Daily at 4:00 AM UTC (9:00 AM Pakistan time)
+    'cron_schedule': '0 4 * * 1,3,5',  # Mon, Wed, Fri at 4:00 AM UTC (9:00 AM Pakistan time)
     'python_version': '3.11',
-    'workflow_name': 'Daily Government Road Complaint Emails',
+    'workflow_name': 'Government Road Complaint Emails (Mon/Wed/Fri)',
 }
 
 # Monitoring Configuration
@@ -152,4 +144,21 @@ DEV_CONFIG = {
     'dry_run': False,    # Set to True to simulate email sending
     'verbose_logging': True,  # Set to True for detailed logs
     'max_test_emails': 1,  # Maximum emails to send in test mode
+}
+
+# Media File Configuration
+MEDIA_CONFIG = {
+    'supported_extensions': {
+        # Images
+        '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp',
+        # Videos
+        '.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.mkv',
+        # Documents
+        '.pdf', '.doc', '.docx', '.txt', '.rtf',
+        # Archives
+        '.zip', '.rar', '.7z'
+    },
+    'max_file_size_mb': 25,  # Maximum individual file size
+    'max_total_size_mb': 50,  # Maximum total attachment size
+    'auto_discovery': True,   # Automatically discover files in media directory
 }

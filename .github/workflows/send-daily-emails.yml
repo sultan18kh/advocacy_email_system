@@ -5,7 +5,7 @@ on:
     # Run on Monday, Wednesday, Friday at 9:00 AM Pakistan Time (UTC+5)
     # This translates to 4:00 AM UTC on Mon, Wed, Fri
     # Cron format: minute hour day month day-of-week
-    # 0 = Sunday, 1 = Monday, 3 = Wednesday, 5 = Friday
+    # 1 = Monday, 3 = Wednesday, 5 = Friday
     - cron: '0 4 * * 1,3,5'
   workflow_dispatch:  # Allow manual triggering
 
@@ -27,20 +27,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
+    - name: Validate configuration
+      run: |
+        python src/test_email.py
+        
     - name: Send emails
       env:
-        # Only set secrets that exist - the Python script will handle missing ones
+        # Email service configurations - only set secrets that exist
         GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL || '' }}
         GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD || '' }}
         OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL || '' }}
         OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD || '' }}
         YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL || '' }}
         YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD || '' }}
+        # GitHub Actions environment flag
+        GITHUB_ACTIONS: true
       run: |
-        python src/send_single_email.py
+        cd src
+        python send_single_email.py
         
     - name: Log completion
+      if: always()
       run: |
-        echo "Government road complaint emails sent at $(date)"
-        echo "Next scheduled send: Monday, Wednesday, or Friday at 9:00 AM Pakistan time"
+        echo "Government road complaint emails processing completed at $(date)"
+        echo "Next scheduled send: Monday, Wednesday, or Friday at 9:00 AM Pakistan time (4:00 AM UTC)"
         echo "Check the logs above for success/failure details"
+        echo "Workflow status: ${{ job.status }}"
