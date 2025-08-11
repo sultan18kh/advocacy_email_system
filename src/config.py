@@ -3,20 +3,14 @@ Configuration file for the Automated Government Email System
 Customize these settings according to your needs.
 """
 
-# Email Recipients - UPDATED WITH VERIFIED GOVERNMENT EMAILS
+# Primary Recipient Emails (TO field)
 RECIPIENT_EMAILS = [
     # Walton Cantonment Board - VERIFIED
     "waltoncb@outlook.com",
     # Chief Minister Punjab and Complaint System - VERIFIED
     "complaints@cm.punjab.gov.pk",  # CM Punjab Complaint Portal
-    # Walton Cantonment Board and Lahore Cantonments - VERIFIED
-    "info@lcb.gov.pk",  # Lahore Cantonment Board - Verified
-    # Note: Walton Cantonment Board email not available due to website maintenance
     # Infrastructure Development - VERIFIED
     "info@idap.pk",  # Infrastructure Development Authority Punjab - Verified
-    # MNA/MPA Representatives - VERIFIED
-    "saad.na125@na.gov.pk",  # Khawaja Saad Rafique (National Assembly) - Verified
-    "pp.168@pap.gov.pk",  # Khawaja Saad Rafique (Provincial Assembly) - Verified
     # Planning and Development Board
     "info@pnd.punjab.gov.pk",  # Planning & Development Board Punjab
     # Transport and Roads Department
@@ -28,10 +22,34 @@ RECIPIENT_EMAILS = [
     "complaints@punjab.gov.pk",  # Punjab Government Complaints
     "helpline@punjab.gov.pk",  # Punjab Government Helpline
     "citizenportal@punjab.gov.pk",  # Punjab Citizen Portal
-    # Highway Department - KEEPING EXISTING (Standard format)
-    "ce@punjabhighways.gov.pk",  # Chief Engineer Punjab Highways
-    "info@punjabhighways.gov.pk",  # Punjab Highways Information
 ]
+
+# CC (Carbon Copy) Emails - for informational purposes
+CC_EMAILS = [
+    # Media outlets for transparency
+    # "editor@dawn.com",  # Dawn News
+    # "letters@tribune.com.pk",  # The Express Tribune
+    # "feedback@geo.tv",  # Geo News
+]
+
+# BCC (Blind Carbon Copy) Emails - for tracking and backup
+BCC_EMAILS = [
+    # Backup and tracking emails
+    "sultan18kh@gmail.com",
+    "humakhan1127@gmail.com",
+]
+
+# Email Distribution Configuration
+EMAIL_DISTRIBUTION_CONFIG = {
+    'use_cc': False,  # Enable CC functionality
+    'use_bcc': True,  # Enable BCC functionality
+    'cc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
+    'bcc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
+    'max_cc_emails': 10,  # Maximum CC recipients per email
+    'max_bcc_emails': 5,  # Maximum BCC recipients per email
+    'validate_cc_bcc': True,  # Validate CC/BCC email formats
+    'log_distribution': True,  # Log email distribution details
+}
 
 # Email Schedule Configuration
 EMAIL_SCHEDULE = {
