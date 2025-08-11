@@ -30,9 +30,6 @@ CC_EMAILS = [
     # "editor@dawn.com",  # Dawn News
     # "letters@tribune.com.pk",  # The Express Tribune
     # "feedback@geo.tv",  # Geo News
-    # Civil society organizations
-    "info@hrcp-web.org",  # Human Rights Commission of Pakistan
-    "contact@transparency.org.pk",  # Transparency International Pakistan
 ]
 
 # BCC (Blind Carbon Copy) Emails - for tracking and backup
@@ -44,7 +41,7 @@ BCC_EMAILS = [
 
 # Email Distribution Configuration
 EMAIL_DISTRIBUTION_CONFIG = {
-    'use_cc': True,  # Enable CC functionality
+    'use_cc': False,  # Enable CC functionality
     'use_bcc': True,  # Enable BCC functionality
     'cc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
     'bcc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
