@@ -184,6 +184,86 @@ class GovernmentEmailSender:
         
         print("✅ GovernmentEmailSender initialized successfully")
 
+    def get_available_templates(self):
+        """Get list of available email templates"""
+        try:
+            templates = []
+            for template_id, template in self.email_templates.items():
+                templates.append({
+                    'id': template_id,
+                    'name': template.get('name', f'Template {template_id}'),
+                    'language': template.get('language', 'Unknown'),
+                    'description': f"Template {template_id}: {template.get('name', 'Unknown')} in {template.get('language', 'Unknown')}"
+                })
+            return templates
+        except Exception as e:
+            print(f"❌ Error getting available templates: {e}")
+            return []
+
+    def validate_email_templates(self):
+        """Validate that email templates are properly configured"""
+        try:
+            if not self.email_templates:
+                print("❌ No email templates configured")
+                return False
+            
+            required_fields = ['subject_template', 'body_template', 'name', 'language']
+            missing_templates = []
+            invalid_templates = []
+            
+            for template_id, template in self.email_templates.items():
+                # Check if template has all required fields
+                missing_fields = [field for field in required_fields if field not in template]
+                if missing_fields:
+                    invalid_templates.append(f"Template {template_id}: Missing fields {missing_fields}")
+                
+                # Check if template has valid format strings
+                try:
+                    # Test template formatting with dummy data
+                    test_data = {
+                        'reference_number': 'TEST-REF',
+                        'legal_notice_id': 'TEST-LN',
+                        'date_formatted': 'Test Date',
+                        'time_formatted': 'Test Time',
+                        'area_name': 'Test Area',
+                        'city': 'Test City',
+                        'province': 'Test Province',
+                        'country': 'Test Country',
+                        'primary_issue': 'Test Issue',
+                        'specific_problems_formatted': 'Test Problems',
+                        'affected_population': 'Test Population',
+                        'constitutional_articles': 'Test Articles',
+                        'constitutional_articles_formatted': 'Test Articles Formatted',
+                        'relevant_laws_formatted': 'Test Laws',
+                        'escalation_path_formatted': 'Test Escalation',
+                        'escalation_days': 7,
+                        'response_hours': 24
+                    }
+                    
+                    template['subject_template'].format(**test_data)
+                    template['body_template'].format(**test_data)
+                    
+                except KeyError as e:
+                    invalid_templates.append(f"Template {template_id}: Missing variable {e}")
+                except Exception as e:
+                    invalid_templates.append(f"Template {template_id}: Format error {e}")
+            
+            if invalid_templates:
+                print("❌ Email template validation failed:")
+                for error in invalid_templates:
+                    print(f"   {error}")
+                return False
+            
+            print(f"✅ Email templates validated: {len(self.email_templates)} templates configured")
+            for template_id, template in self.email_templates.items():
+                print(f"   Template {template_id}: {template.get('name', 'Unknown')} ({template.get('language', 'Unknown')})")
+            
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error validating email templates: {e}")
+            return False
+
     def _validate_email(self, email):
         """Validate email address format"""
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
