@@ -2,12 +2,8 @@ name: Government Road Complaint Emails (Mon/Wed/Fri)
 
 on:
   schedule:
-    # Run on Monday, Wednesday, Friday at 9:00 AM Pakistan Time (UTC+5)
-    # This translates to 4:00 AM UTC on Mon, Wed, Fri
-    # Cron format: minute hour day month day-of-week
-    # 1 = Monday, 3 = Wednesday, 5 = Friday
     - cron: '0 4 * * 1,3,5'
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   send-emails:
@@ -28,19 +24,28 @@ jobs:
         pip install -r requirements.txt
         
     - name: Validate configuration
+      env:
+        # Set only the email services that are actually configured
+        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+        GITHUB_ACTIONS: true
       run: |
-        python src/test_email.py
+        cd src
+        python test_email.py
         
     - name: Send emails
       env:
-        # Email service configurations - only set secrets that exist
-        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL || '' }}
-        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD || '' }}
-        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL || '' }}
-        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD || '' }}
-        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL || '' }}
-        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD || '' }}
-        # GitHub Actions environment flag
+        # Set only the email services that are actually configured
+        GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+        GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+        OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+        YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
         GITHUB_ACTIONS: true
       run: |
         cd src
@@ -51,5 +56,4 @@ jobs:
       run: |
         echo "Government road complaint emails processing completed at $(date)"
         echo "Next scheduled send: Monday, Wednesday, or Friday at 9:00 AM Pakistan time (4:00 AM UTC)"
-        echo "Check the logs above for success/failure details"
         echo "Workflow status: ${{ job.status }}"
