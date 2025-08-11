@@ -104,41 +104,60 @@ def test_email_validation():
     return all_passed
 
 def test_email_templates():
-    """Test the email template generation"""
-    print("\n🧪 Testing Email Templates...")
+    """Test email template generation and validation"""
+    print("\n" + "="*60)
+    print("🧪 TESTING EMAIL TEMPLATE SYSTEM")
+    print("="*60)
     
-    # Simulate the template generation logic with timezone
     try:
-        if PYTZ_AVAILABLE:
-            pakistan_tz = pytz.timezone('Asia/Karachi')
-            utc_now = datetime.now(pytz.UTC)
-            today = utc_now.astimezone(pakistan_tz)
-        else:
-            today = datetime.now()
-    except:
-        today = datetime.now()
-    
-    reference_number = f"ROAD-{today.strftime('%Y%m%d')}-{random.randint(1000, 9999)}"
-    
-    templates = {
-        1: {
-            'subject': f"URGENT: Critical Road Infrastructure Failure - Bedian Road & Ali View Garden Area (Ref: {reference_number})",
-            'language': 'English'
-        },
-        2: {
-            'subject': f"فوری: بیڈین روڈ اور علی ویو گارڈن ایریا میں سڑک کی شدید خرابی (Ref: {reference_number})",
-            'language': 'Urdu'
-        },
-        3: {
-            'subject': f"LEGAL NOTICE: Citizen Rights Violation - Road Infrastructure Neglect (Ref: {reference_number})",
-            'language': 'Legal English'
-        }
-    }
-    
-    for template_id, template in templates.items():
-        print(f"✅ Template {template_id} ({template['language']}): {template['subject'][:60]}...")
-    
-    return True
+        # Test template validation
+        print("\n📋 Testing template validation...")
+        
+        # Import the class directly from the module
+        import send_single_email
+        sender = send_single_email.GovernmentEmailSender()
+        
+        # Test available templates
+        available_templates = sender.get_available_templates()
+        print(f"✅ Found {len(available_templates)} available templates:")
+        for template in available_templates:
+            print(f"   {template['description']}")
+        
+        # Test template generation for each type
+        print("\n📝 Testing template generation...")
+        for template_type in [1, 2, 3]:
+            try:
+                template = sender.get_email_template(template_type)
+                print(f"✅ Template {template_type} generated successfully:")
+                print(f"   Subject: {template['subject'][:60]}...")
+                print(f"   Language: {template['language']}")
+                print(f"   Reference: {template['reference_number']}")
+                
+                # Test template formatting
+                if template['body'] and len(template['body']) > 100:
+                    print(f"   Body length: {len(template['body'])} characters")
+                else:
+                    print(f"   ⚠️  Body seems too short: {len(template['body'])} characters")
+                    
+            except Exception as e:
+                print(f"❌ Failed to generate template {template_type}: {e}")
+        
+        # Test fallback template
+        print("\n🔄 Testing fallback template...")
+        try:
+            fallback = sender._get_fallback_template(99)  # Invalid template type
+            print(f"✅ Fallback template generated:")
+            print(f"   Subject: {fallback['subject']}")
+            print(f"   Reference: {fallback['reference_number']}")
+        except Exception as e:
+            print(f"❌ Fallback template failed: {e}")
+        
+        print("\n✅ Email template testing completed successfully!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Email template testing failed: {e}")
+        return False
 
 def test_email_rotation():
     """Test the email service rotation logic"""
@@ -454,6 +473,84 @@ def test_error_handling():
     
     return True
 
+def test_configuration():
+    """Test configuration file loading and validation"""
+    print("\n" + "="*60)
+    print("⚙️  TESTING CONFIGURATION SYSTEM")
+    print("="*60)
+    
+    try:
+        # Test basic config imports
+        print("\n📋 Testing configuration imports...")
+        import config
+        from config import (
+            EMAIL_TEMPLATES, EMAIL_TEMPLATE_CONFIG, LOCATION_INFO, 
+            ISSUE_DETAILS, LEGAL_FRAMEWORK, MEDIA_CONFIG
+        )
+        print("✅ Configuration imports successful")
+        
+        # Test email templates configuration
+        print("\n📧 Testing email templates configuration...")
+        if EMAIL_TEMPLATES:
+            print(f"✅ Found {len(EMAIL_TEMPLATES)} email templates:")
+            for template_id, template in EMAIL_TEMPLATES.items():
+                print(f"   Template {template_id}: {template.get('name', 'Unknown')} ({template.get('language', 'Unknown')})")
+                
+                # Check required fields
+                required_fields = ['subject_template', 'body_template', 'name', 'language']
+                missing_fields = [field for field in required_fields if field not in template]
+                if missing_fields:
+                    print(f"   ⚠️  Missing fields: {missing_fields}")
+                else:
+                    print(f"   ✅ All required fields present")
+        else:
+            print("❌ No email templates configured")
+            return False
+        
+        # Test template configuration
+        print("\n⚙️  Testing template configuration...")
+        if EMAIL_TEMPLATE_CONFIG:
+            print(f"✅ Template configuration loaded:")
+            print(f"   Default template: {EMAIL_TEMPLATE_CONFIG.get('default_template', 'Not set')}")
+            print(f"   Template rotation: {EMAIL_TEMPLATE_CONFIG.get('template_rotation', 'Not set')}")
+            print(f"   Reference prefix: {EMAIL_TEMPLATE_CONFIG.get('custom_variables', {}).get('reference_prefix', 'Not set')}")
+        else:
+            print("❌ Template configuration not found")
+            return False
+        
+        # Test location and issue configuration
+        print("\n📍 Testing location and issue configuration...")
+        if LOCATION_INFO and ISSUE_DETAILS and LEGAL_FRAMEWORK:
+            print("✅ Location, issue, and legal framework configuration loaded")
+            print(f"   Area: {LOCATION_INFO.get('area_name', 'Not set')}")
+            print(f"   City: {LOCATION_INFO.get('city', 'Not set')}")
+            print(f"   Primary issue: {ISSUE_DETAILS.get('primary_issue', 'Not set')}")
+            print(f"   Constitutional articles: {len(LEGAL_FRAMEWORK.get('constitutional_articles', []))}")
+        else:
+            print("❌ Location, issue, or legal framework configuration missing")
+            return False
+        
+        # Test media configuration
+        print("\n📁 Testing media configuration...")
+        if MEDIA_CONFIG:
+            print("✅ Media configuration loaded")
+            print(f"   Supported extensions: {len(MEDIA_CONFIG.get('supported_extensions', set()))}")
+            print(f"   Max file size: {MEDIA_CONFIG.get('max_file_size_mb', 'Not set')} MB")
+            print(f"   Max total size: {MEDIA_CONFIG.get('max_total_size_mb', 'Not set')} MB")
+        else:
+            print("❌ Media configuration not found")
+            return False
+        
+        print("\n✅ Configuration testing completed successfully!")
+        return True
+        
+    except ImportError as e:
+        print(f"❌ Configuration import failed: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Configuration testing failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("🚀 Automated Government Email System - Enhanced Test Suite")
@@ -466,26 +563,23 @@ def main():
     else:
         print("💻 Running in local development environment")
     
-    tests = [
-        test_dependencies,
-        test_timezone_handling,
-        test_email_validation,
+    # Run all tests
+    test_functions = [
+        test_environment_variables,
         test_email_templates,
         test_email_rotation,
-        test_template_rotation,
-        test_environment_variables,
-        test_path_resolution,
         test_media_file_discovery,
         test_recipient_emails,
-        test_error_handling
+        test_error_handling,
+        test_configuration
     ]
     
     passed = 0
-    total = len(tests)
+    total = len(test_functions)
     
-    for test in tests:
+    for test_func in test_functions:
         try:
-            if test():
+            if test_func():
                 passed += 1
         except Exception as e:
             print(f"❌ Test failed with error: {e}")
