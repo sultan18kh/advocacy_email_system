@@ -264,7 +264,7 @@ def test_template_selection():
 
     for day in range(1, 8):  # Test all days of the week
         if day == 1:  # Monday
-            template_type = 1
+            template_type = random.choice([1, 3])
             schedule_status = "📧 EMAIL DAY"
         elif day == 5:  # Friday
             template_type = 2
@@ -307,7 +307,7 @@ def test_template_rotation():
 
     for day in range(1, 8):  # Test all days of the week
         if day == 1:  # Monday
-            template_type = 1
+            template_type = random.choice([1, 3])
             schedule_status = "📧 EMAIL DAY"
         elif day == 5:  # Friday
             template_type = 2

@@ -585,8 +585,8 @@ class GovernmentEmailSender:
 
         # Monday = 1, Friday = 5
         if current_day == 1:  # Monday
-            # Use template 1 (English) for Monday
-            return 1
+            # Use template 1 or 3 (English) for Monday
+            return random.choice([1, 3])
         elif current_day == 5:  # Friday
             # Use template 2 (Urdu) for Friday
             return 2
