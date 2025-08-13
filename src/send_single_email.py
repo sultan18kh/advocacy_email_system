@@ -1,5 +1,5 @@
 """
-Automated Government Email Scheduler
+Automated Government Email Scheduler with HTML Support
 Sends automated emails to government officials about road conditions
 in Bedian Road & Ali View Garden area, Lahore.
 """
@@ -38,7 +38,7 @@ except ImportError:
     RECIPIENT_EMAILS = [
         "waltoncb@outlook.com",
         "complaints@cm.punjab.gov.pk",
-        "info@pndpunjab.gov.pk" "info@idap.pk",
+        "info@idap.pk",
         "dc.lahore@punjab.gov.pk",
         "commissioner.lahore@punjab.gov.pk",
         "complaints@punjab.gov.pk",
@@ -55,6 +55,7 @@ except ImportError:
         1: {
             "name": "Basic Complaint Template",
             "language": "English",
+            "content_type": "plain",
             "subject_template": "Infrastructure Complaint - {area_name} (Ref: {reference_number})",
             "body_template": "Basic complaint about infrastructure in {area_name}.",
         }
@@ -216,94 +217,20 @@ class GovernmentEmailSender:
         try:
             templates = []
             for template_id, template in self.email_templates.items():
+                content_type = template.get("content_type", "plain")
                 templates.append(
                     {
                         "id": template_id,
                         "name": template.get("name", f"Template {template_id}"),
                         "language": template.get("language", "Unknown"),
-                        "description": f"Template {template_id}: {template.get('name', 'Unknown')} in {template.get('language', 'Unknown')}",
+                        "content_type": content_type,
+                        "description": f"Template {template_id}: {template.get('name', 'Unknown')} in {template.get('language', 'Unknown')} ({content_type.upper()})",
                     }
                 )
             return templates
         except Exception as e:
             print(f"❌ Error getting available templates: {e}")
             return []
-
-    def validate_email_templates(self):
-        """Validate that email templates are properly configured"""
-        try:
-            if not self.email_templates:
-                print("❌ No email templates configured")
-                return False
-
-            required_fields = ["subject_template", "body_template", "name", "language"]
-            missing_templates = []
-            invalid_templates = []
-
-            for template_id, template in self.email_templates.items():
-                # Check if template has all required fields
-                missing_fields = [
-                    field for field in required_fields if field not in template
-                ]
-                if missing_fields:
-                    invalid_templates.append(
-                        f"Template {template_id}: Missing fields {missing_fields}"
-                    )
-
-                # Check if template has valid format strings
-                try:
-                    # Test template formatting with dummy data
-                    test_data = {
-                        "reference_number": "TEST-REF",
-                        "legal_notice_id": "TEST-LN",
-                        "date_formatted": "Test Date",
-                        "time_formatted": "Test Time",
-                        "area_name": "Test Area",
-                        "city": "Test City",
-                        "province": "Test Province",
-                        "country": "Test Country",
-                        "primary_issue": "Test Issue",
-                        "specific_problems_formatted": "Test Problems",
-                        "affected_population": "Test Population",
-                        "constitutional_articles": "Test Articles",
-                        "constitutional_articles_formatted": "Test Articles Formatted",
-                        "relevant_laws_formatted": "Test Laws",
-                        "escalation_path_formatted": "Test Escalation",
-                        "escalation_days": 7,
-                        "response_hours": 24,
-                    }
-
-                    template["subject_template"].format(**test_data)
-                    template["body_template"].format(**test_data)
-
-                except KeyError as e:
-                    invalid_templates.append(
-                        f"Template {template_id}: Missing variable {e}"
-                    )
-                except Exception as e:
-                    invalid_templates.append(
-                        f"Template {template_id}: Format error {e}"
-                    )
-
-            if invalid_templates:
-                print("❌ Email template validation failed:")
-                for error in invalid_templates:
-                    print(f"   {error}")
-                return False
-
-            print(
-                f"✅ Email templates validated: {len(self.email_templates)} templates configured"
-            )
-            for template_id, template in self.email_templates.items():
-                print(
-                    f"   Template {template_id}: {template.get('name', 'Unknown')} ({template.get('language', 'Unknown')})"
-                )
-
-            return True
-
-        except Exception as e:
-            print(f"❌ Error validating email templates: {e}")
-            return False
 
     def _validate_email(self, email):
         """Validate email address format"""
@@ -538,7 +465,7 @@ class GovernmentEmailSender:
             return template_text
 
     def get_email_template(self, template_type):
-        """Get email template based on type (1, 2, or 3)"""
+        """Get email template based on type (1, 2, or 3) with HTML support"""
         reference_number = self.generate_reference_number()
 
         # Get template from configuration
@@ -561,7 +488,35 @@ class GovernmentEmailSender:
             "body": body,
             "language": template_config["language"],
             "name": template_config["name"],
+            "content_type": template_config.get("content_type", "plain"),
+            "reference_number": reference_number,
         }
+
+    def _create_plain_text_fallback(self, html_content):
+        """Create plain text version from HTML content"""
+        import re
+        
+        # Remove HTML tags
+        text = re.sub(r'<[^<]+?>', '', html_content)
+        
+        # Replace HTML entities
+        text = text.replace('&nbsp;', ' ')
+        text = text.replace('&amp;', '&')
+        text = text.replace('&lt;', '<')
+        text = text.replace('&gt;', '>')
+        text = text.replace('&quot;', '"')
+        text = text.replace('&#x27;', "'")
+        
+        # Clean up multiple spaces and newlines
+        text = re.sub(r'\n\s*\n', '\n\n', text)
+        text = re.sub(r' +', ' ', text)
+        
+        # Clean up extra whitespace around lines
+        lines = text.split('\n')
+        lines = [line.strip() for line in lines]
+        text = '\n'.join(lines)
+        
+        return text.strip()
 
     def select_email_service(self):
         """Select email service based on day of year for rotation with proper fallback"""
@@ -721,24 +676,50 @@ class GovernmentEmailSender:
         )
 
     def send_email(self, service, template):
-        """Send email using specified service and template with improved error handling"""
+        """Send email using specified service and template with HTML support"""
         try:
-            # Create message
-            msg = MIMEMultipart()
+            content_type = template.get("content_type", "plain")
+            
+            # Create multipart message for better compatibility
+            if content_type == "html":
+                msg = MIMEMultipart('alternative')
+                print(f"📧 Creating multipart HTML email")
+            else:
+                msg = MIMEMultipart()
+                print(f"📧 Creating plain text email")
 
             # Set headers and distribution
             distribution = self._setup_email_headers(msg, service, template)
 
-            # Add body
-            msg.attach(MIMEText(template["body"], "plain", "utf-8"))
+            # Add email content based on type
+            if content_type == "html":
+                # Create plain text fallback
+                plain_text = self._create_plain_text_fallback(template["body"])
+                
+                # Add plain text version (fallback)
+                part1 = MIMEText(plain_text, 'plain', 'utf-8')
+                msg.attach(part1)
+                
+                # Add HTML version (preferred)
+                part2 = MIMEText(template["body"], 'html', 'utf-8')
+                msg.attach(part2)
+                
+                print(f"✅ Added HTML content with plain text fallback")
+            else:
+                # Plain text only
+                msg.attach(MIMEText(template["body"], "plain", "utf-8"))
+                print(f"✅ Added plain text content")
 
             # Attach media files
             self.attach_media_files(msg)
 
             # Connect to SMTP server with specific error handling
             try:
-                server = smtplib.SMTP(service["smtp_server"], service["smtp_port"])
-                server.starttls()
+                server = smtplib.SMTP(service["smtp_server"], service["smtp_port"], timeout=60)
+                server.ehlo()  # Identify ourselves
+                server.starttls()  # Enable encryption
+                server.ehlo()  # Re-identify as encrypted connection
+                print(f"✅ Connected to {service['name']} SMTP server")
             except (smtplib.SMTPConnectError, smtplib.SMTPServerDisconnected) as e:
                 print(f"❌ Failed to connect to {service['name']} SMTP server: {e}")
                 return False
@@ -749,6 +730,7 @@ class GovernmentEmailSender:
             # Authenticate
             try:
                 server.login(service["email"], service["password"])
+                print(f"✅ Authenticated with {service['name']}")
             except smtplib.SMTPAuthenticationError as e:
                 print(f"❌ Authentication failed for {service['name']}: {e}")
                 server.quit()
@@ -761,12 +743,10 @@ class GovernmentEmailSender:
             # Send email
             try:
                 text = msg.as_string()
-                server.sendmail(
-                    service["email"],
-                    distribution["to"] + distribution["cc"] + distribution["bcc"],
-                    text,
-                )
+                all_recipients = distribution["to"] + distribution["cc"] + distribution["bcc"]
+                server.sendmail(service["email"], all_recipients, text)
                 server.quit()
+                print(f"✅ Email sent successfully")
             except smtplib.SMTPRecipientsRefused as e:
                 print(f"❌ Recipients refused by {service['name']}: {e}")
                 server.quit()
@@ -780,8 +760,8 @@ class GovernmentEmailSender:
                 server.quit()
                 return False
 
-            print(f"✅ Email sent successfully using {service['name']}")
-            print(f"📧 Template: {template['name']} ({template['language']})")
+            print(f"📧 Service: {service['name']}")
+            print(f"📧 Template: {template['name']} ({template['language']}) - {content_type.upper()}")
             print(f"📧 Subject: {template['subject'][:50]}...")
             print(f"👥 Recipients: {distribution['total']}")
             return True
@@ -808,7 +788,7 @@ class GovernmentEmailSender:
 
         print(f"📧 Using service: {service['name']}")
         print(
-            f"📝 Using template: {template['name']} (Type {template_type}, {template['language']})"
+            f"📝 Using template: {template['name']} (Type {template_type}, {template['language']}, {template.get('content_type', 'plain').upper()})"
         )
         print(f"📧 Available services: {len(self.email_services)}")
         print(
@@ -831,6 +811,36 @@ class GovernmentEmailSender:
         time.sleep(delay)
 
         return success
+
+    # Fallback template for testing without configuration
+    def _get_fallback_template(self, template_type):
+        """Get a fallback template for testing purposes"""
+        reference_number = self.generate_reference_number()
+        
+        fallback_template = {
+            "subject": f"Test Email Template {template_type} (Ref: {reference_number})",
+            "body": f"""
+Test Email Template {template_type}
+
+This is a test email to verify the email system is working correctly.
+
+Reference: {reference_number}
+Time: {self.get_current_time_pakistan().strftime('%Y-%m-%d %H:%M:%S PKT')}
+Template Type: {template_type}
+
+This email system sends automated complaints to government officials about 
+infrastructure issues in Bedian Road & Ali View Garden Area, Lahore.
+
+Best regards,
+Automated Email System
+            """.strip(),
+            "language": "English",
+            "name": f"Fallback Template {template_type}",
+            "content_type": "plain",
+            "reference_number": reference_number,
+        }
+        
+        return fallback_template
 
 
 def main():
