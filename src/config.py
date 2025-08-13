@@ -12,7 +12,7 @@ RECIPIENT_EMAILS = [
     # Infrastructure Development - VERIFIED
     "info@idap.pk",  # Infrastructure Development Authority Punjab - Verified
     # Planning and Development Board
-    "info@pnd.punjab.gov.pk",  # Planning & Development Board Punjab
+    "info@pndpunjab.gov.pk",  # Planning & Development Board Punjab
     # Transport and Roads Department
     "info@transport.punjab.gov.pk",  # Transport Department Punjab
     # District Administration - KEEPING EXISTING (Standard format)
@@ -41,14 +41,14 @@ BCC_EMAILS = [
 
 # Email Distribution Configuration
 EMAIL_DISTRIBUTION_CONFIG = {
-    'use_cc': False,  # Enable CC functionality
-    'use_bcc': True,  # Enable BCC functionality
-    'cc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
-    'bcc_empty_handling': 'skip',  # Options: 'skip', 'send_to_only', 'error'
-    'max_cc_emails': 10,  # Maximum CC recipients per email
-    'max_bcc_emails': 5,  # Maximum BCC recipients per email
-    'validate_cc_bcc': True,  # Validate CC/BCC email formats
-    'log_distribution': True,  # Log email distribution details
+    "use_cc": False,  # Enable CC functionality
+    "use_bcc": True,  # Enable BCC functionality
+    "cc_empty_handling": "skip",  # Options: 'skip', 'send_to_only', 'error'
+    "bcc_empty_handling": "skip",  # Options: 'skip', 'send_to_only', 'error'
+    "max_cc_emails": 10,  # Maximum CC recipients per email
+    "max_bcc_emails": 5,  # Maximum BCC recipients per email
+    "validate_cc_bcc": True,  # Validate CC/BCC email formats
+    "log_distribution": True,  # Log email distribution details
 }
 
 # Email Schedule Configuration
@@ -441,9 +441,9 @@ EMAIL_SERVICES = [
 
 # GitHub Actions Configuration
 GITHUB_ACTIONS_CONFIG = {
-    "cron_schedule": "0 4 * * 1,3,5",  # Mon, Wed, Fri at 4:00 AM UTC (9:00 AM Pakistan time)
+    "cron_schedule": "0 4 * * 1,5",  # Mon, Fri at 4:00 AM UTC (9:00 AM Pakistan time)
     "python_version": "3.11",
-    "workflow_name": "Government Road Complaint Emails (Mon/Wed/Fri)",
+    "workflow_name": "Government Road Complaint Emails (Mon/Fri)",
 }
 
 # Monitoring Configuration
