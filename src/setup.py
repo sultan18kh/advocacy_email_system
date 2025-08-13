@@ -8,6 +8,7 @@ import sys
 import subprocess
 from pathlib import Path
 
+
 def print_banner():
     """Print the setup banner"""
     print("🚀 Automated Government Email System - Setup")
@@ -16,40 +17,45 @@ def print_banner():
     print("for government road complaints in Bedian Road & Ali View Garden area.")
     print("=" * 60)
 
+
 def check_python_version():
     """Check if Python version is compatible"""
     print("🐍 Checking Python version...")
-    
+
     version = sys.version_info
     if version.major < 3 or (version.major == 3 and version.minor < 8):
         print("❌ Python 3.8 or higher is required")
         print(f"   Current version: {version.major}.{version.minor}.{version.micro}")
         return False
-    
+
     print(f"✅ Python {version.major}.{version.minor}.{version.micro} is compatible")
     return True
+
 
 def install_dependencies():
     """Install required Python dependencies"""
     print("\n📦 Installing dependencies...")
-    
+
     try:
         # Check if requirements.txt exists in parent directory
         requirements_path = "../requirements.txt"
         if not os.path.exists(requirements_path):
             requirements_path = "requirements.txt"
-        
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements_path])
+
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "-r", requirements_path]
+        )
         print("✅ Dependencies installed successfully")
         return True
     except subprocess.CalledProcessError as e:
         print(f"❌ Failed to install dependencies: {e}")
         return False
 
+
 def create_media_directory():
     """Create media directory if it doesn't exist"""
     print("\n📁 Setting up media directory...")
-    
+
     # Try to create media directory in parent directory
     media_dir = Path("../media")
     if not media_dir.exists():
@@ -57,31 +63,34 @@ def create_media_directory():
         print("✅ Media directory created")
     else:
         print("✅ Media directory already exists")
-    
+
     # Create placeholder files
     placeholder_files = [
         "road_photo1.jpg",
-        "road_photo2.jpg", 
+        "road_photo2.jpg",
         "pothole_video.mp4",
-        "flooding_video.mp4"
+        "flooding_video.mp4",
     ]
-    
+
     for file_name in placeholder_files:
         file_path = media_dir / file_name
         if not file_path.exists():
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write(f"# Placeholder for {file_name}\n")
-                f.write("# Replace this file with actual photo/video of road conditions\n")
+                f.write(
+                    "# Replace this file with actual photo/video of road conditions\n"
+                )
             print(f"✅ Created placeholder: {file_name}")
         else:
             print(f"✅ File exists: {file_name}")
-    
+
     return True
+
 
 def check_git_repository():
     """Check if this is a git repository"""
     print("\n🔧 Checking Git repository...")
-    
+
     try:
         result = subprocess.run(["git", "status"], capture_output=True, text=True)
         if result.returncode == 0:
@@ -94,11 +103,12 @@ def check_git_repository():
         print("❌ Git not installed")
         return False
 
+
 def create_github_secrets_guide():
     """Create a guide for setting up GitHub Secrets"""
     print("\n🔐 GitHub Secrets Setup Guide")
     print("-" * 40)
-    
+
     secrets_guide = """# GitHub Secrets Configuration Guide
 
 Follow these steps to configure GitHub Secrets:
@@ -220,22 +230,23 @@ YAHOO_PASSWORD = your_yahoo_password
 3. Click "Run workflow" → "Run workflow"
 4. Check the logs to see if emails are sent successfully
 """
-    
+
     # Create docs directory if it doesn't exist
     docs_dir = Path("../docs")
     if not docs_dir.exists():
         docs_dir.mkdir()
-    
+
     with open(docs_dir / "GITHUB_SECRETS_GUIDE.md", "w") as f:
         f.write(secrets_guide)
-    
+
     print("✅ Created docs/GITHUB_SECRETS_GUIDE.md")
     print("📖 Read this guide to configure your GitHub Secrets")
+
 
 def create_deployment_checklist():
     """Create a deployment checklist"""
     print("\n📋 Creating deployment checklist...")
-    
+
     checklist = """# Deployment Checklist
 
 ## Pre-Deployment Tasks:
@@ -288,66 +299,70 @@ def create_deployment_checklist():
 - [ ] Update media files if missing
 - [ ] Check recipient email addresses
 """
-    
+
     # Create docs directory if it doesn't exist
     docs_dir = Path("../docs")
     if not docs_dir.exists():
         docs_dir.mkdir()
-    
+
     with open(docs_dir / "DEPLOYMENT_CHECKLIST.md", "w") as f:
         f.write(checklist)
-    
+
     print("✅ Created docs/DEPLOYMENT_CHECKLIST.md")
     print("📋 Use this checklist to ensure proper deployment")
+
 
 def run_tests():
     """Run the test suite"""
     print("\n🧪 Running test suite...")
-    
+
     try:
-        result = subprocess.run([sys.executable, "test_email.py"], capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, "test_email.py"], capture_output=True, text=True
+        )
         print(result.stdout)
         if result.stderr:
             print("Errors:", result.stderr)
-        
+
         if result.returncode == 0:
             print("✅ All tests passed!")
         else:
             print("⚠️  Some tests failed (expected for initial setup)")
-        
+
         return True
     except Exception as e:
         print(f"❌ Failed to run tests: {e}")
         return False
 
+
 def main():
     """Main setup function"""
     print_banner()
-    
+
     # Check Python version
     if not check_python_version():
         return False
-    
+
     # Install dependencies
     if not install_dependencies():
         return False
-    
+
     # Create media directory
     if not create_media_directory():
         return False
-    
+
     # Check git repository
     git_ok = check_git_repository()
     if not git_ok:
         print("💡 Consider initializing a git repository for version control")
-    
+
     # Create guides
     create_github_secrets_guide()
     create_deployment_checklist()
-    
+
     # Run tests
     run_tests()
-    
+
     print("\n" + "=" * 60)
     print("🎉 Setup completed successfully!")
     print("\n📋 Next Steps:")
@@ -357,8 +372,9 @@ def main():
     print("4. Configure GitHub Secrets in your repository")
     print("5. Test the system with manual workflow trigger")
     print("\n🚀 Your automated government email system is ready!")
-    
+
     return True
+
 
 if __name__ == "__main__":
     success = main()
