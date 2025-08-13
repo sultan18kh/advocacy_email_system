@@ -22,9 +22,6 @@ RECIPIENT_EMAILS = [
     "complaints@punjab.gov.pk",  # Punjab Government Complaints
     "helpline@punjab.gov.pk",  # Punjab Government Helpline
     "citizenportal@punjab.gov.pk",  # Punjab Citizen Portal
-    # MNA SAAD RAFIQUE - VERIFIED
-    "pp.168@pap.gov.pk",  # https://www.pap.gov.pk/members/profile/en/21/1414
-    "saad.na125@na.gov.pk",  # https://www.diltak.com/khawaja-saad-rafique-mna-of-na-125lahore-viii/
 ]
 
 # CC (Carbon Copy) Emails - for informational purposes
