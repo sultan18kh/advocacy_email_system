@@ -87,7 +87,7 @@ def test_html_email_system():
             # Check HTML structure
             html_checks = [
                 ('DOCTYPE declaration', '<!DOCTYPE html>' in body),
-                ('HTML tags', '<html>' in body and '</html>' in body),
+                ('HTML tags', '<html' in body and '</html>' in body),
                 ('Head section', '<head>' in body and '</head>' in body),
                 ('Body section', '<body>' in body and '</body>' in body),
                 ('CSS styles', '<style' in body),
@@ -132,7 +132,7 @@ def test_template_configuration():
                 
                 # Check if body contains HTML
                 body = template.get('body_template', '')
-                if '<html>' in body:
+                if '<html' in body:
                     print(f"   ✅ Contains HTML structure")
                 else:
                     print(f"   ❌ Missing HTML structure")
@@ -200,7 +200,7 @@ def generate_html_previews():
             return generate_fallback_previews()
 
         # Create preview directory
-        preview_dir = Path("email_previews")
+        preview_dir = Path("../email_previews")
         preview_dir.mkdir(exist_ok=True)
         print(f"📁 Created preview directory: {preview_dir}")
 
@@ -331,7 +331,7 @@ def generate_fallback_previews():
     """Generate previews with fallback templates"""
     print("\n📋 Generating fallback previews...")
     
-    preview_dir = Path("email_previews")
+    preview_dir = Path("../email_previews")
     preview_dir.mkdir(exist_ok=True)
     
     # Simple HTML template
@@ -665,7 +665,7 @@ def test_template_generation():
                 
                 # Check HTML content
                 if template.get('content_type') == 'html':
-                    if '<html>' in template['body']:
+                    if '<html' in template['body']:
                         print(f"   ✅ Contains HTML structure")
                     else:
                         print(f"   ❌ Missing HTML structure")

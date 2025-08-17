@@ -18,6 +18,12 @@ RECIPIENT_EMAILS = [
     # District Administration - KEEPING EXISTING (Standard format)
     "dc.lahore@punjab.gov.pk",  # Deputy Commissioner Lahore
     "commissioner.lahore@punjab.gov.pk",  # Commissioner Lahore Division
+    "dclahore@punjab.gov.pk",  # Deputy Commissioner Lahore
+    "snalahore@punjab.gov.pk",  # Secretary Lahore
+    "revenuelahore@gmail.com",  # Revenue Department Lahore
+    "adcglhr@gmail.com",  # Additional Deputy Commissioner Lahore
+    "doclahore@hotmail.com",  # Director of Commerce Lahore
+    "edohealthlhr@yahoo.com",  # Director of Health Lahore
     # Provincial Government - KEEPING EXISTING (Standard format)
     "complaints@punjab.gov.pk",  # Punjab Government Complaints
     "helpline@punjab.gov.pk",  # Punjab Government Helpline
@@ -35,7 +41,8 @@ CC_EMAILS = [
 # BCC (Blind Carbon Copy) Emails - for tracking and backup
 BCC_EMAILS = [
     # Backup and tracking emails
-    "sultan18kh@gmail.com",
+    "sultan512@gmail.com",
+    # "sultan18kh@gmail.com",
     # "humakhan1127@gmail.com",
 ]
 
@@ -176,6 +183,12 @@ EMAIL_TEMPLATES = {
         .legal-section h2 {{
             color: #6b46c1;
             margin-top: 0;
+        }}
+        .legal-section p {{
+            color: #4c1d95;
+        }}
+        .legal-section .bullet-point {{
+            color: #4c1d95;
         }}
         .recommendations {{
             background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
@@ -347,9 +360,13 @@ EMAIL_TEMPLATES = {
         <div class="legal-section">
             <h2>⚖️ CONSTITUTIONAL AND LEGAL CONSIDERATIONS</h2>
             <p>This situation raises serious concerns under:</p>
-            <div class="bullet-point"><strong>Article 9 of the Constitution of Pakistan</strong>: Right to Life - which includes safe transportation and basic amenities essential for dignified living</div>
-            <div class="bullet-point"><strong>Article 25</strong>: Right to Equality - ensuring fair treatment in public service delivery and equal allocation of development resources</div>
-            <div class="bullet-point"><strong>Article 9A</strong>: Right to Clean and Healthy Environment - proper road infrastructure contributes to environmental health and safety</div>
+            
+            <div class="subsection">
+                <h3>📜 Constitutional Rights Violations</h3>
+                <div class="bullet-point"><strong>Article 9 of the Constitution of Pakistan</strong>: Right to Life - which includes safe transportation and basic amenities essential for dignified living</div>
+                <div class="bullet-point"><strong>Article 25</strong>: Right to Equality - ensuring fair treatment in public service delivery and equal allocation of development resources</div>
+                <div class="bullet-point"><strong>Article 9A</strong>: Right to Clean and Healthy Environment - proper road infrastructure contributes to environmental health and safety</div>
+            </div>
         </div>
 
         <div class="recommendations">
@@ -531,6 +548,12 @@ EMAIL_TEMPLATES = {
             color: #6b46c1;
             margin-top: 0;
         }}
+        .legal-section p {{
+            color: #4c1d95;
+        }}
+        .legal-section .bullet-point {{
+            color: #4c1d95;
+        }}
         .recommendations {{
             background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
             border-right: 4px solid #10b981;
@@ -701,9 +724,13 @@ EMAIL_TEMPLATES = {
         <div class="legal-section">
             <h2>⚖️ آئینی اور قانونی تحفظات</h2>
             <p>یہ صورتحال مندرجہ ذیل کے تحت سنگین تشویش کا باعث ہے:</p>
-            <div class="bullet-point"><strong>پاکستان کے آئین کا آرٹیکل 9</strong>: حق زندگی - جس میں محفوظ نقل و حمل اور بنیادی سہولات شامل ہیں</div>
-            <div class="bullet-point"><strong>آرٹیکل 25</strong>: مساوات کا حق - عوامی خدمات میں منصفانہ سلوک اور ترقیاتی وسائل کی مساوی تقسیم</div>
-            <div class="bullet-point"><strong>آرٹیکل 9A</strong>: صاف اور صحت مند ماحول کا حق</div>
+            
+            <div class="subsection">
+                <h3>📜 آئینی حقوق کی خلاف ورزیاں</h3>
+                <div class="bullet-point"><strong>پاکستان کے آئین کا آرٹیکل 9</strong>: حق زندگی - جس میں محفوظ نقل و حمل اور بنیادی سہولات شامل ہیں</div>
+                <div class="bullet-point"><strong>آرٹیکل 25</strong>: مساوات کا حق - عوامی خدمات میں منصفانہ سلوک اور ترقیاتی وسائل کی مساوی تقسیم</div>
+                <div class="bullet-point"><strong>آرٹیکل 9A</strong>: صاف اور صحت مند ماحول کا حق</div>
+            </div>
         </div>
 
         <div class="recommendations">
