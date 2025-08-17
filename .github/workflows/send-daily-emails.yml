@@ -1,4 +1,4 @@
-name: Government Road Complaint Emails (Mon/Wed/Fri)
+name: Government Road Complaint Emails (Mon/Fri)
 
 on:
   schedule:
