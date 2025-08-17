@@ -42,6 +42,7 @@ CC_EMAILS = [
 BCC_EMAILS = [
     # Backup and tracking emails
     "sultan512@gmail.com",
+    "Mussabsalman12@gmail.com", # AVG Phase 1 Resident
     # "sultan18kh@gmail.com",
     # "humakhan1127@gmail.com",
 ]
