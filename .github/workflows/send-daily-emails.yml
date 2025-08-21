@@ -29,10 +29,10 @@ jobs:
           # Set only the email services that are actually configured
           GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
-          OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
-          YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
-          YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+          # OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+          # OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+          # YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+          # YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
           GITHUB_ACTIONS: true
         run: |
           cd src
@@ -43,10 +43,10 @@ jobs:
           # Set only the email services that are actually configured
           GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
-          OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
-          YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
-          YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+          # OUTLOOK_EMAIL: ${{ secrets.OUTLOOK_EMAIL }}
+          # OUTLOOK_PASSWORD: ${{ secrets.OUTLOOK_PASSWORD }}
+          # YAHOO_EMAIL: ${{ secrets.YAHOO_EMAIL }}
+          # YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
           GITHUB_ACTIONS: true
         run: |
           cd src

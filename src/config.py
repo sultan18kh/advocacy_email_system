@@ -28,6 +28,13 @@ RECIPIENT_EMAILS = [
     "complaints@punjab.gov.pk",  # Punjab Government Complaints
     "helpline@punjab.gov.pk",  # Punjab Government Helpline
     "citizenportal@punjab.gov.pk",  # Punjab Citizen Portal
+    "admnsmu@gmail.com",  # Punjab Special Monitoring Unit
+    "info@pmln.org",  # PMLN Party Official
+    # Ministry of Information and Broadcasting
+    "info@moib.gov.pk",  # MOIB
+    # Punjab Traffic Police
+    "addlig.trf@punjabpolice.gov.pk",  # Punjab Police
+    "dig.traffic@punjabpolice.gov.pk",  # Punjab Police
 ]
 
 # CC (Carbon Copy) Emails - for informational purposes
