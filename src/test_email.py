@@ -688,7 +688,7 @@ def test_template_logic():
     """Test template selection logic"""
     print("\n📋 Testing template selection logic...")
     
-    # Test Monday/Friday schedule
+    # Test Monday/Wednesday/Friday schedule
     day_names = {1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 
                  5: "Friday", 6: "Saturday", 7: "Sunday"}
     
@@ -700,7 +700,10 @@ def test_template_logic():
 
     for day in range(1, 8):
         if day == 1:  # Monday
-            template_type = random.choice([1, 3])
+            template_type = 1
+            schedule_status = "📧 EMAIL DAY"
+        elif day == 3:  # Wednesday
+            template_type = 3
             schedule_status = "📧 EMAIL DAY"
         elif day == 5:  # Friday
             template_type = 2

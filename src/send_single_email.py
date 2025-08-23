@@ -531,17 +531,20 @@ class GovernmentEmailSender:
         return self.email_services[service_index]
 
     def select_template(self):
-        """Select template based on day of week for Monday/Friday rotation"""
+        """Select template based on day of week for Monday/Wednesday/Friday rotation"""
         if not self.template_config["template_rotation"]:
             return self.template_config["default_template"]
 
         # Get current day of week (0=Monday, 6=Sunday in isoweekday)
         current_day = self.get_current_time_pakistan().isoweekday()
 
-        # Monday = 1, Friday = 5
+        # Monday = 1, Wednesday = 3, Friday = 5
         if current_day == 1:  # Monday
             # Use template 1 or 3 (English) for Monday
-            return random.choice([1, 3])
+            return 1
+        elif current_day == 3:  # Wednesday
+            # Use template 1 (English) for Wednesday
+            return 3
         elif current_day == 5:  # Friday
             # Use template 2 (Urdu) for Friday
             return 2
@@ -855,15 +858,16 @@ def main():
             success = sender.send_daily_emails()
             return success
         else:
-            # Local mode - schedule for Monday and Friday only
-            print("💻 Running in local mode - scheduling emails for Monday and Friday")
+            # Local mode - schedule for Monday, Wednesday, and Friday only
+            print("💻 Running in local mode - scheduling emails for Monday, Wednesday, and Friday")
             schedule.every().monday.at("09:00").do(sender.send_daily_emails)
+            schedule.every().wednesday.at("09:00").do(sender.send_daily_emails)
             schedule.every().friday.at("09:00").do(sender.send_daily_emails)
 
             print(
-                "📅 Scheduled: Emails will be sent every Monday and Friday at 9:00 AM PKT"
+                "📅 Scheduled: Emails will be sent every Monday, Wednesday, and Friday at 9:00 AM PKT"
             )
-            print("⏸️  Wednesday emails have been disabled as requested")
+            print("📧 Three emails per week for better advocacy coverage")
 
             while True:
                 schedule.run_pending()
