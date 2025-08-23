@@ -49,6 +49,9 @@ CC_EMAILS = [
 BCC_EMAILS = [
     # Backup and tracking emails
     "sultan512@gmail.com",
+    "sukhan@alphabold.com",
+    "fatima.umer15@gmail.com",
+    "ajbutt48@gmail.com",
     "Mussabsalman12@gmail.com", # AVG Phase 1 Resident
     # "sultan18kh@gmail.com",
     # "humakhan1127@gmail.com",
@@ -1192,9 +1195,9 @@ EMAIL_SERVICES = [
 
 # GitHub Actions Configuration
 GITHUB_ACTIONS_CONFIG = {
-    "cron_schedule": "0 4 * * 1,5",  # Mon, Fri at 4:00 AM UTC (9:00 AM Pakistan time)
+    "cron_schedule": "0 4 * * 1,3,5",  # Mon, Wed, Fri at 4:00 AM UTC (9:00 AM Pakistan time)
     "python_version": "3.11",
-    "workflow_name": "Government Road Complaint Emails (Mon/Fri)",
+    "workflow_name": "Government Road Complaint Emails (Mon/Wed/Fri)",
 }
 
 # Monitoring Configuration

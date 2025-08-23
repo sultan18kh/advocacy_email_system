@@ -1,9 +1,9 @@
-name: Government Road Complaint Emails (Mon/Fri)
+name: Government Road Complaint Emails (Mon/Wed/Fri)
 
 on:
   schedule:
-    # Runs Monday, Friday at 4:00 AM UTC (9:00 AM Pakistan Time)
-    - cron: "0 4 * * 1,5"
+    # Runs Monday, Wednesday, Friday at 4:00 AM UTC (9:00 AM Pakistan Time)
+    - cron: "0 4 * * 1,3,5"
   workflow_dispatch: # Keep for manual testing
 
 jobs:
@@ -56,6 +56,6 @@ jobs:
         if: always()
         run: |
           echo "📧 Government road complaint emails workflow completed at $(date +'%Y-%m-%d %H:%M:%S')"
-          echo "⏰ Next scheduled send: Monday or Friday at 4:00 AM Pakistan time"
-          echo "📅 Schedule: Monday (English) and Friday (Urdu) emails only"
+          echo "⏰ Next scheduled send: Monday, Wednesday, or Friday at 4:00 AM Pakistan time"
+          echo "📅 Schedule: Monday (English), Wednesday (English), and Friday (Urdu) emails only"
           echo "📊 Status: ${{ job.status }}"
