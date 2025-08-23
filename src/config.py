@@ -15,6 +15,8 @@ RECIPIENT_EMAILS = [
     "info@pndpunjab.gov.pk",  # Planning & Development Board Punjab
     # Transport and Roads Department
     "info@transport.punjab.gov.pk",  # Transport Department Punjab
+    # Communication & Works Department - VERIFIED
+    "info.cnw@punjab.gov.pk",
     # District Administration - KEEPING EXISTING (Standard format)
     "dc.lahore@punjab.gov.pk",  # Deputy Commissioner Lahore
     "commissioner.lahore@punjab.gov.pk",  # Commissioner Lahore Division
