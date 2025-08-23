@@ -48,11 +48,12 @@ CC_EMAILS = [
 # BCC (Blind Carbon Copy) Emails - for tracking and backup
 BCC_EMAILS = [
     # Backup and tracking emails
-    "sultan512@gmail.com",
-    "sukhan@alphabold.com",
+    "sultan512@gmail.com", # Secondary Test Email
+    "sukhan@alphabold.com", # Outlook Test Email
     "fatima.umer15@gmail.com",
     "ajbutt48@gmail.com",
     "Mussabsalman12@gmail.com", # AVG Phase 1 Resident
+    "hssn.wasim3334@gmail.com", # AVG Phase 1 Resident & Colleague
     # "sultan18kh@gmail.com",
     # "humakhan1127@gmail.com",
 ]
